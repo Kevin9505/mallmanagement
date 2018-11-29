@@ -13,6 +13,20 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+// 设置导航守卫 -- 判断用户是否登录过 -- 拦截用户
+router.beforeEach((to, from, next) => {
+  // console.log(to)
+  // 当存在 token 或者 访问的是登录页 都可以跳转 不然默认返回登录页
+  const userToken = sessionStorage.getItem('userToken')
+  if (userToken || to.path === '/') {
+    next()
+  } else {
+    next({
+      path: '/'
+    })
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
