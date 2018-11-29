@@ -35,7 +35,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     }
   })
 ```
-# 添加请求拦截器 -- 因为除了登录页不需要 Authorization , 其他页面都需要在请求头上带上 token 不然不能请求到数据
+# 添加请求拦截器 
+-- 因为除了登录页不需要 Authorization , 其他页面都需要在请求头上带上 token 不然不能请求到数据
 ` 利用 axios 在请求之前添加拦截器 `
 ```js
 axios.interceptors.request.use(function(config){
@@ -51,9 +52,19 @@ axios.interceptors.request.use(function(config){
     return Promise.reject(error)
   })
   ```
+# api 请求接口暴露
+`由于网站的请求接口都放在一个文件上,需要用 export 来暴露接口`
+```js
+export const login = (params) =>{
+  return axios.post('login',params)
+    .then((results) => {
+      return results.data
+    })
+}
 
-
-
+// 在导入的时候 需要 { }
+import { login } from './api/index/js'
+```
 
 
 
