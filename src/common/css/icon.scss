@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'maket';
+  src: url('../fonts/maket.eot?a1q4ti');
+  src: url('../fonts/maket.eot?a1q4ti#iefix') format('embedded-opentype'),
+    url('../fonts/maket.ttf?a1q4ti') format('truetype'),
+    url('../fonts/maket.woff?a1q4ti') format('woff'),
+    url('../fonts/maket.svg?a1q4ti#maket') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'maket' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil:before {
+  content: "\e905";
+}
+
+.icon-pushpin:before {
+  content: "\e946";
+}
+
+.icon-user-check:before {
+  content: "\e975";
+}
+
+.icon-search:before {
+  content: "\e986";
+}
+
+.icon-key:before {
+  content: "\e98d";
+}
+
+.icon-menu:before {
+  content: "\e9bd";
+}
