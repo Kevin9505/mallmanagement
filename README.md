@@ -35,3 +35,24 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     }
   })
 ```
+# 添加请求拦截器 -- 因为除了登录页不需要 Authorization , 其他页面都需要在请求头上带上 token 不然不能请求到数据
+` 利用 axios 在请求之前添加拦截器 `
+axios.interceptors.request.use(function(config){
+  // 获取token
+  const userToken = sessionStrosge.getItem('userToken')
+  
+  if(userToken){
+    config.headers['Authorization']=userToken
+  }
+  return config
+  },function(error){
+    // 请求错误时执行
+    return Promise.reject(error)
+  })
+
+
+
+
+
+
+
