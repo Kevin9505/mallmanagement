@@ -5,6 +5,7 @@
 </template>
 
 <script>
+// default 引用这个
 export default {
   name: 'App'
 }
