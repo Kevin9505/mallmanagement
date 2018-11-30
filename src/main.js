@@ -18,11 +18,11 @@ router.beforeEach((to, from, next) => {
   // console.log(to)
   // 当存在 token 或者 访问的是登录页 都可以跳转 不然默认返回登录页
   const userToken = sessionStorage.getItem('userToken')
-  if (userToken || to.path === '/') {
+  if (userToken || to.path === '/login') {
     next()
   } else {
     next({
-      path: '/'
+      path: '/login'
     })
   }
 })
