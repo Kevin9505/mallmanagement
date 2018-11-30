@@ -16,6 +16,7 @@
       >
         <el-button
           slot="append"
+          @click="init"
           icon="el-icon-search"
         ></el-button>
       </el-input>
@@ -95,7 +96,18 @@
         </el-table>
       </template>
     </div>
-
+    <!-- 分页器 -->
+    <el-pagination
+      style="margin-top: 15px;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="params.pagenum"
+      :page-sizes="[1, 2, 3, 4]"
+      :page-size="params.pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    >
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -104,24 +116,42 @@ import { getUserList } from '@/api/index'
 export default {
   data () {
     return {
+      total: 0,
       userInfo: [],
-      userstatus: true,
+      userstatus: '',
       params: {
         query: '',
         pagenum: 1,
-        pagesize: 10
+        pagesize: 1
       }
     }
   },
   mounted () {
-    getUserList(this.params).then(res => {
-      console.log(res)
-      if (res.meta.status === 200) {
-        this.userInfo = res.data.users
-      }
-    })
+    this.init()
   },
-  methods: {}
+  methods: {
+    init () {
+      getUserList(this.params).then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.userInfo = res.data.users
+          this.total = res.data.total
+        }
+      })
+    },
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+      this.params.pagesize = val
+      console.log(this.params)
+      this.init()
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+      this.params.pagenum = val
+      console.log(this.params)
+      this.init()
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
