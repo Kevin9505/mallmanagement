@@ -62,7 +62,7 @@ export const login = (params) =>{
     })
 }
 
-// 在导入的时候 需要 { }
+// 在导入的时候 需要 { } => 代表众多成员中的谋一个
 import { login } from './api/index/js'
 ```
 
