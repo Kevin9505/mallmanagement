@@ -25,6 +25,7 @@
             prefix-icon="myicon myicon-key"
             placeholder="请输入密码"
             type="password"
+            @keydown.enter="submitForm('userForm')"
           ></el-input>
         </el-form-item>
         <el-button
