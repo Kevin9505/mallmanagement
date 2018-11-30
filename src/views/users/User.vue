@@ -10,7 +10,7 @@
     <div style="margin-top: 15px;">
       <el-input
         placeholder="请输入内容"
-        v-model="username"
+        v-model="params.query"
         class="input-with-select"
         style="width:300px;"
       >
@@ -31,7 +31,7 @@
     >
       <template>
         <el-table
-          :data="tableData"
+          :data="userInfo"
           border
           style="width: 100%"
         >
@@ -41,19 +41,19 @@
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="username"
             label="姓名"
             width="180"
           >
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="email"
             label="邮箱"
             width="180"
           >
           </el-table-column>
           <el-table-column
-            prop="address"
+            prop="mobile"
             label="电话"
           >
           </el-table-column>
@@ -63,7 +63,7 @@
           >
             <template slot-scope="scope">
               <el-switch
-                v-model="userstatus"
+                v-model="scope.row.mg_state"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
               >
@@ -99,36 +99,29 @@
   </div>
 </template>
 <script>
+import { getUserList } from '@/api/index'
+
 export default {
   data () {
     return {
-      msg: '',
-      username: '',
+      userInfo: [],
       userstatus: true,
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      params: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      }
     }
-  }
+  },
+  mounted () {
+    getUserList(this.params).then(res => {
+      console.log(res)
+      if (res.meta.status === 200) {
+        this.userInfo = res.data.users
+      }
+    })
+  },
+  methods: {}
 }
 </script>
 <style lang="scss" scoped>

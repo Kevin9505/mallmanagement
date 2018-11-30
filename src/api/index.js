@@ -27,3 +27,12 @@ export const login = (params) => {
       return results.data
     })
 }
+// 获取用户列表
+export const getUserList = (params) => {
+  return axios.get('users', {
+    params: params
+  })
+    .then((results) => {
+      return results.data
+    })
+}
