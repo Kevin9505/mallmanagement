@@ -65,7 +65,50 @@ export const login = (params) =>{
 // 在导入的时候 需要 { } => 代表众多成员中的谋一个
 import { login } from './api/index/js'
 ```
-
+# 表单的验证
+` 利用element 框架 form 组件提供的表单验证功能,通过 rules 属性传入约定的验证规则,并将 form-item 的 prop 属性设置为需校验的字段名即可. `
+```js
+  // 例子
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form-item label="活动名称" prop="name">
+      <el-input v-model="ruleForm.name"></el-input>
+    </el-form-item>
+  </el-form>
+  <script>
+     export default {
+      data(){
+      return{
+        ruleForm: {
+          name: ''
+        }，
+        rules:{
+          name:[
+            // trigger 触发器
+            { required:true, message:'请输入活动名称', trigger:'blur' }
+          ]
+        }
+      }
+    },
+    methods: {
+      // 提交表单
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      // 重置表单
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+  </script>
+ 
+```
 
 
 
