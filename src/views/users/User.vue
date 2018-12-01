@@ -2,7 +2,7 @@
   <div class="user">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item><a href="/">用户管理</a></el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -137,30 +137,44 @@
         :visible.sync="dialogFormVisible"
       >
         <el-form
-          :model="form"
+          :model="addForm"
+          :rules="rules"
+          ref="addForm"
           :label-width="formLabelWidth"
         >
-          <el-form-item label="用户名">
+          <el-form-item
+            label="用户名"
+            prop="username"
+          >
             <el-input
-              v-model="form.name"
+              v-model="addForm.username"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="密码">
+          <el-form-item
+            label="密码"
+            prop="password"
+          >
             <el-input
-              v-model="form.name"
+              v-model="addForm.password"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="邮箱">
+          <el-form-item
+            label="邮箱"
+            prop="email"
+          >
             <el-input
-              v-model="form.name"
+              v-model="addForm.email"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="电话">
+          <el-form-item
+            label="电话"
+            prop="mobile"
+          >
             <el-input
-              v-model="form.name"
+              v-model="addForm.mobile"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -169,10 +183,10 @@
           slot="footer"
           class="dialog-footer"
         >
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="resetForm ('addForm')">取 消</el-button>
           <el-button
             type="primary"
-            @click="dialogFormVisible = false"
+            @click="submitForm ('addForm')"
           >确 定</el-button>
         </div>
       </el-dialog>
@@ -180,12 +194,13 @@
   </div>
 </template>
 <script>
-import { getUserList } from '@/api/index'
+import { getUserList, addUser } from '@/api/index'
 
 export default {
   data () {
     return {
       total: 0,
+      // 用户信息
       userInfo: [],
       userstatus: '',
       params: {
@@ -193,25 +208,41 @@ export default {
         pagenum: 1,
         pagesize: 1
       },
+      // 控制添加提示框的显示
       dialogTableVisible: false,
       dialogFormVisible: false,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      // 添加用户数据
+      addForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
       },
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      // 验证规则
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          {
+            type: 'email',
+            required: true,
+            message: '请输入正确的邮箱',
+            trigger: 'blur, change'
+          }
+        ],
+        mobile: [{ required: true, message: '请输入手机号码', trigger: 'blur' }]
+      }
     }
   },
   mounted () {
     this.init()
   },
   methods: {
+    // 获取用户信息
     init () {
       getUserList(this.params).then(res => {
         console.log(res)
@@ -221,17 +252,49 @@ export default {
         }
       })
     },
+    // 每页显示多少条
     handleSizeChange (val) {
       // console.log(`每页 ${val} 条`)
       this.params.pagesize = val
-      console.log(this.params)
+      // console.log(this.params)
       this.init()
     },
+    // 显示当前页
     handleCurrentChange (val) {
       // console.log(`当前页: ${val}`)
       this.params.pagenum = val
-      console.log(this.params)
+      // console.log(this.params)
       this.init()
+    },
+    // 重置表单
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.dialogFormVisible = false
+    },
+    // 提交表单
+    submitForm (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          addUser(this.addForm).then(res => {
+            console.log(res)
+            if (res.meta.status === 201) {
+              this.dialogFormVisible = false
+              this.$refs[formName].resetFields()
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+              this.init()
+            } else {
+              this.$message.error(res.meta.msg)
+              return false
+            }
+          })
+        } else {
+          this.$message.error('输入信息有误,请检查!!!')
+          return false
+        }
+      })
     }
   }
 }

@@ -36,3 +36,10 @@ export const getUserList = (params) => {
       return results.data
     })
 }
+// 登录验证接口方法
+export const addUser = (params) => {
+  return axios.post('users', params)
+    .then((results) => {
+      return results.data
+    })
+}
