@@ -67,3 +67,11 @@ export const changeUserState = (uid, type) => {
       return results.data
     })
 }
+
+// 获取用户角色信息
+export const getUserRolesList = () => {
+  return axios.get('roles')
+    .then((results) => {
+      return results.data
+    })
+}

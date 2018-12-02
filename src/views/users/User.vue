@@ -111,7 +111,7 @@
                   plain
                   type="success"
                   class="el-icon-check"
-                  @click="handleImpower(scope.$index, scope.row)"
+                  @click="handleImpower(scope.row)"
                 ></el-button>
               </el-tooltip>
             </template>
@@ -241,15 +241,66 @@
         >确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 授权角色信息 -->
+    <el-dialog
+      title="授权角色"
+      :visible.sync="grantdialogFormVisible"
+    >
+      <el-form
+        :model="grantform"
+        :rules="rules"
+        ref="rolesList"
+        :label-width="formLabelWidth"
+      >
+        <el-form-item
+          label="用户名"
+          prop="username"
+        >
+          <el-input
+            v-model="grantform.username"
+            autocomplete="off"
+            :disabled="true"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="角色">
+          <template>
+            <el-select
+              v-model="value"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="roles in rolesList"
+                :key="roles.id"
+                :label="roles.roleName"
+                :value="roles.id"
+              >
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="grantdialogFormVisible=!grantdialogFormVisible">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="editUserForm ('editForm')"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
+// 导入接口
 import {
   getUserList,
   addUser,
   editUser,
   deleteUser,
-  changeUserState
+  changeUserState,
+  getUserRolesList
 } from '@/api/index'
 
 export default {
@@ -264,10 +315,20 @@ export default {
         pagenum: 1,
         pagesize: 5
       },
+      // 用户授权信息
+      rolesList: [],
+      grantform: {
+        id: '',
+        rid: '',
+        username: ''
+      },
+      value: '',
       // 控制添加提示框的显示
       adddialogFormVisible: false,
-      // 控制添加提示框的显示
+      // 控制编辑用户提示框的显示
       editdialogFormVisible: false,
+      // 控制授权角色提示框的显示
+      grantdialogFormVisible: false,
       // 添加用户数据
       addForm: {
         username: '',
@@ -363,7 +424,7 @@ export default {
     // 编辑用户
     handleEdit (data) {
       this.editdialogFormVisible = true
-      console.log(data)
+      // console.log(data)
       this.editForm.id = data.id
       this.editForm.username = data.username
       this.editForm.mobile = data.mobile
@@ -432,7 +493,6 @@ export default {
     },
     // 修改用户状态
     changeUserState (data) {
-      console.log(data)
       changeUserState(data.id, data.mg_state).then(res => {
         if (res.meta.status === 200) {
           this.$message({
@@ -446,6 +506,18 @@ export default {
             type: 'success'
           })
           this.init()
+        }
+      })
+    },
+    // 授权角色
+    handleImpower (data) {
+      console.log(data)
+      this.grantform = data
+      this.grantdialogFormVisible = true
+      getUserRolesList().then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.rolesList = res.data
         }
       })
     }
