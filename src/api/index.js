@@ -59,3 +59,11 @@ export const deleteUser = (id) => {
       return results.data
     })
 }
+
+// 修改用户状态
+export const changeUserState = (uid, type) => {
+  return axios.put(`users/${uid}/state/${type}`)
+    .then((results) => {
+      return results.data
+    })
+}

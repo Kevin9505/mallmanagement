@@ -68,6 +68,7 @@
                 v-model="scope.row.mg_state"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
+                @change="changeUserState(scope.row)"
               >
               </el-switch>
             </template>
@@ -243,7 +244,13 @@
   </div>
 </template>
 <script>
-import { getUserList, addUser, editUser, deleteUser } from '@/api/index'
+import {
+  getUserList,
+  addUser,
+  editUser,
+  deleteUser,
+  changeUserState
+} from '@/api/index'
 
 export default {
   data () {
@@ -388,6 +395,7 @@ export default {
         }
       })
     },
+    // 删除用户
     handleDelete (id) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -421,6 +429,25 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    // 修改用户状态
+    changeUserState (data) {
+      console.log(data)
+      changeUserState(data.id, data.mg_state).then(res => {
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          this.init()
+        } else {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          this.init()
+        }
+      })
     }
   }
 }
