@@ -23,7 +23,7 @@
       <el-button
         type="success"
         plain
-        @click="dialogFormVisible=true"
+        @click="adddialogFormVisible=true"
       >添加用户</el-button>
     </div>
     <!-- 用户列表 -->
@@ -84,7 +84,7 @@
                   type="primary"
                   plain
                   class="el-icon-edit"
-                  @click="handleEdit(scope.$index, scope.row)"
+                  @click="handleEdit(scope.row)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -124,77 +124,126 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="params.pagenum"
-      :page-sizes="[1, 2, 3, 4]"
+      :page-sizes="[5, 10, 15, 20]"
       :page-size="params.pagesize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     >
     </el-pagination>
     <!-- 添加用户 -->
-    <div>
-      <el-dialog
-        title="添加用户"
-        :visible.sync="dialogFormVisible"
+    <el-dialog
+      title="添加用户"
+      :visible.sync="adddialogFormVisible"
+    >
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addForm"
+        :label-width="formLabelWidth"
       >
-        <el-form
-          :model="addForm"
-          :rules="rules"
-          ref="addForm"
-          :label-width="formLabelWidth"
+        <el-form-item
+          label="用户名"
+          prop="username"
         >
-          <el-form-item
-            label="用户名"
-            prop="username"
-          >
-            <el-input
-              v-model="addForm.username"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="密码"
-            prop="password"
-          >
-            <el-input
-              v-model="addForm.password"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="邮箱"
-            prop="email"
-          >
-            <el-input
-              v-model="addForm.email"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="电话"
-            prop="mobile"
-          >
-            <el-input
-              v-model="addForm.mobile"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <div
-          slot="footer"
-          class="dialog-footer"
+          <el-input
+            v-model="addForm.username"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="密码"
+          prop="password"
         >
-          <el-button @click="resetForm ('addForm')">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="submitForm ('addForm')"
-          >确 定</el-button>
-        </div>
-      </el-dialog>
-    </div>
+          <el-input
+            v-model="addForm.password"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="邮箱"
+          prop="email"
+        >
+          <el-input
+            v-model="addForm.email"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="电话"
+          prop="mobile"
+        >
+          <el-input
+            v-model="addForm.mobile"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="resetForm ('addForm')">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="addUserForm ('addForm')"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 编辑用户信息 -->
+    <el-dialog
+      title="编辑用户"
+      :visible.sync="editdialogFormVisible"
+    >
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editForm"
+        :label-width="formLabelWidth"
+      >
+        <el-form-item
+          label="用户名"
+          prop="username"
+        >
+          <el-input
+            v-model="editForm.username"
+            autocomplete="off"
+            :disabled="true"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="邮箱"
+          prop="email"
+        >
+          <el-input
+            v-model="editForm.email"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="电话"
+          prop="mobile"
+        >
+          <el-input
+            v-model="editForm.mobile"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editdialogFormVisible=!editdialogFormVisible">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="editUserForm ('editForm')"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getUserList, addUser } from '@/api/index'
+import { getUserList, addUser, editUser } from '@/api/index'
 
 export default {
   data () {
@@ -206,15 +255,23 @@ export default {
       params: {
         query: '',
         pagenum: 1,
-        pagesize: 1
+        pagesize: 5
       },
       // 控制添加提示框的显示
-      dialogTableVisible: false,
-      dialogFormVisible: false,
+      adddialogFormVisible: false,
+      // 控制添加提示框的显示
+      editdialogFormVisible: false,
       // 添加用户数据
       addForm: {
         username: '',
         password: '',
+        email: '',
+        mobile: ''
+      },
+      // 编辑用户数据
+      editForm: {
+        username: '',
+        id: '',
         email: '',
         mobile: ''
       },
@@ -269,16 +326,16 @@ export default {
     // 重置表单
     resetForm (formName) {
       this.$refs[formName].resetFields()
-      this.dialogFormVisible = false
+      this.adddialogFormVisible = false
     },
-    // 提交表单
-    submitForm (formName) {
+    // 添加用户
+    addUserForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addUser(this.addForm).then(res => {
             console.log(res)
             if (res.meta.status === 201) {
-              this.dialogFormVisible = false
+              this.adddialogFormVisible = false
               this.$refs[formName].resetFields()
               this.$message({
                 message: res.meta.msg,
@@ -288,6 +345,41 @@ export default {
             } else {
               this.$message.error(res.meta.msg)
               return false
+            }
+          })
+        } else {
+          this.$message.error('输入信息有误,请检查!!!')
+          return false
+        }
+      })
+    },
+    // 编辑用户
+    handleEdit (data) {
+      this.editdialogFormVisible = true
+      console.log(data)
+      this.editForm.id = data.id
+      this.editForm.username = data.username
+      this.editForm.mobile = data.mobile
+      this.editForm.email = data.email
+    },
+    editUserForm (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this.editForm)
+          editUser(this.editForm).then(res => {
+            console.log(res)
+            if (res.meta.status === 200) {
+              this.editdialogFormVisible = false
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+              this.init()
+            } else {
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
             }
           })
         } else {

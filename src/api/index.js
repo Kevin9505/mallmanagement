@@ -43,3 +43,11 @@ export const addUser = (params) => {
       return results.data
     })
 }
+
+// 编辑用户
+export const editUser = (params) => {
+  return axios.put(`users/${params.id}`, params)
+    .then((results) => {
+      return results.data
+    })
+}
