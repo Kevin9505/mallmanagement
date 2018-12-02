@@ -97,7 +97,7 @@
                   plain
                   type="danger"
                   class="el-icon-delete"
-                  @click="handleImpower(scope.$index, scope.row)"
+                  @click="handleDelete(scope.row.id)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -110,7 +110,7 @@
                   plain
                   type="success"
                   class="el-icon-check"
-                  @click="handleDelete(scope.$index, scope.row)"
+                  @click="handleImpower(scope.$index, scope.row)"
                 ></el-button>
               </el-tooltip>
             </template>
@@ -243,7 +243,7 @@
   </div>
 </template>
 <script>
-import { getUserList, addUser, editUser } from '@/api/index'
+import { getUserList, addUser, editUser, deleteUser } from '@/api/index'
 
 export default {
   data () {
@@ -365,7 +365,7 @@ export default {
     editUserForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.editForm)
+          // console.log(this.editForm)
           editUser(this.editForm).then(res => {
             console.log(res)
             if (res.meta.status === 200) {
@@ -385,6 +385,23 @@ export default {
         } else {
           this.$message.error('输入信息有误,请检查!!!')
           return false
+        }
+      })
+    },
+    handleDelete (id) {
+      deleteUser(id).then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          this.init()
+        } else {
+          this.$message({
+            message: res.meta.msg,
+            type: 'error'
+          })
         }
       })
     }

@@ -51,3 +51,11 @@ export const editUser = (params) => {
       return results.data
     })
 }
+
+// 删除用户
+export const deleteUser = (id) => {
+  return axios.delete(`users/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}
