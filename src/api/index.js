@@ -64,6 +64,7 @@ export const deleteUser = (id) => {
 export const changeUserState = (uid, type) => {
   return axios.put(`users/${uid}/state/${type}`)
     .then((results) => {
+      // console.log(results)
       return results.data
     })
 }
@@ -71,6 +72,23 @@ export const changeUserState = (uid, type) => {
 // 获取用户角色信息
 export const getUserRolesList = () => {
   return axios.get('roles')
+    .then((results) => {
+      return results.data
+    })
+}
+
+// 授予用户角色
+export const grantUserRoles = (params) => {
+  // console.log(params)
+  return axios.put(`users/${params.id}/role`, {rid: params.rid})
+    .then((results) => {
+      return results.data
+    })
+}
+
+// 根据用户id 获取用户角色
+export const getUserById = (id) => {
+  return axios.get(`users/${id}`)
     .then((results) => {
       return results.data
     })

@@ -249,7 +249,7 @@
       <el-form
         :model="grantform"
         :rules="rules"
-        ref="rolesList"
+        ref="grantform"
         :label-width="formLabelWidth"
       >
         <el-form-item
@@ -265,8 +265,9 @@
         <el-form-item label="角色">
           <template>
             <el-select
-              v-model="value"
+              v-model="grantform.rid"
               placeholder="请选择"
+              @change="getRid"
             >
               <el-option
                 v-for="roles in rolesList"
@@ -286,7 +287,7 @@
         <el-button @click="grantdialogFormVisible=!grantdialogFormVisible">取 消</el-button>
         <el-button
           type="primary"
-          @click="editUserForm ('editForm')"
+          @click="grantUserRoles"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -300,7 +301,9 @@ import {
   editUser,
   deleteUser,
   changeUserState,
-  getUserRolesList
+  getUserRolesList,
+  grantUserRoles,
+  getUserById
 } from '@/api/index'
 
 export default {
@@ -315,14 +318,13 @@ export default {
         pagenum: 1,
         pagesize: 5
       },
-      // 用户授权信息
+      // 用户角色信息
       rolesList: [],
       grantform: {
         id: '',
         rid: '',
         username: ''
       },
-      value: '',
       // 控制添加提示框的显示
       adddialogFormVisible: false,
       // 控制编辑用户提示框的显示
@@ -370,7 +372,7 @@ export default {
     // 获取用户信息
     init () {
       getUserList(this.params).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.userInfo = res.data.users
           this.total = res.data.total
@@ -493,7 +495,9 @@ export default {
     },
     // 修改用户状态
     changeUserState (data) {
+      console.log(data)
       changeUserState(data.id, data.mg_state).then(res => {
+        console.log(res)
         if (res.meta.status === 200) {
           this.$message({
             message: res.meta.msg,
@@ -503,23 +507,64 @@ export default {
         } else {
           this.$message({
             message: res.meta.msg,
-            type: 'success'
+            type: 'error'
           })
-          this.init()
+          // this.init()
         }
       })
     },
-    // 授权角色
+    // 授权角色提示框
     handleImpower (data) {
-      console.log(data)
-      this.grantform = data
+      // console.log(data)
+      this.grantform.username = data.username
+      this.grantform.id = data.id
+      this.grantform.rid = data.role_name
       this.grantdialogFormVisible = true
       getUserRolesList().then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.rolesList = res.data
+          // 根据用户的id 获取用户的角色信息
+          getUserById(this.grantform.id).then(results => {
+            // console.log(results)
+            if (results.data.rid <= 0) {
+              this.grantform.rid = '请选择'
+            } else {
+              this.grantform.rid = results.data.rid
+            }
+          })
         }
       })
+    },
+    // 修改角色授权
+    grantUserRoles () {
+      // console.log(this.grantform)
+      if (this.grantform.rid) {
+        grantUserRoles(this.grantform).then(res => {
+          // console.log(res)
+          if (res.meta.status === 200) {
+            this.$message({
+              message: res.meta.msg,
+              type: 'success'
+            })
+            this.grantdialogFormVisible = false
+            this.init()
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: 'success'
+            })
+          }
+        })
+      } else {
+        this.$message({
+          message: '错了哦,信息要填写完整哦...',
+          type: 'error'
+        })
+      }
+    },
+    getRid () {
+      // console.log(this.grantform)
     }
   }
 }
