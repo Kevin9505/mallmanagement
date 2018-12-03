@@ -149,7 +149,7 @@
         <el-button @click="addGrantDialogFormVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="addRole(addGrantRoles)"
+          @click="addRole('addGrantRoles')"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -162,8 +162,9 @@
         :model="editGrantRoles"
         :label-width="formLabelWidth"
         ref="editGrantRoles"
+        :rules="rules"
       >
-        <el-form-item label="角色名称">
+        <el-form-item label="角色名称" prop="roleName">
           <el-input
             v-model="editGrantRoles.roleName"
             autocomplete="off"
@@ -295,24 +296,34 @@ export default {
       })
     },
     // 添加角色
-    addRole () {
-      addRole(this.addGrantRoles)
-        .then(res => {
-          console.log(res)
-          if (res.meta.status === 201) {
-            this.$message({
-              message: res.meta.msg,
-              type: 'success'
+    addRole (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          addRole(this.addGrantRoles)
+            .then(res => {
+              console.log(res)
+              if (res.meta.status === 201) {
+                this.$message({
+                  message: res.meta.msg,
+                  type: 'success'
+                })
+                this.addGrantDialogFormVisible = false
+                this.init()
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: 'error'
+                })
+              }
             })
-            this.addGrantDialogFormVisible = false
-            this.init()
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: 'error'
-            })
-          }
-        })
+        } else {
+          this.$message({
+            message: '检查输入是否为空呢',
+            type: 'error'
+          })
+          return false
+        }
+      })
     },
     // 显示编辑角色弹框
     handleEdit (data) {
