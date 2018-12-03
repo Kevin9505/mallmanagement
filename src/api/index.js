@@ -124,3 +124,11 @@ export const addRole = (params) => {
       return results.data
     })
 }
+
+// 编辑角色
+export const editRole = (params) => {
+  return axios.put(`roles/${params.id}`, params)
+    .then((results) => {
+      return results.data
+    })
+}

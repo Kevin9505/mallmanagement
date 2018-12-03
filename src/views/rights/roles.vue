@@ -149,11 +149,45 @@
         >确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 编辑角色 -->
+    <el-dialog
+      title="编辑角色"
+      :visible.sync="editGrantDialogFormVisible"
+    >
+      <el-form :model="editGrantRoles" :label-width="formLabelWidth">
+        <el-form-item
+          label="角色名称"
+        >
+          <el-input
+            v-model="editGrantRoles.roleName"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="角色描述"
+        >
+          <el-input
+            v-model="editGrantRoles.roleDesc"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editGrantDialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="editRole"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserRolesList, getGrantList, grantRolesById, addRole } from '@/api'
+import { getUserRolesList, getGrantList, grantRolesById, addRole, editRole } from '@/api'
 
 export default {
   data () {
@@ -161,6 +195,7 @@ export default {
       rolesdialogFormVisible: false,
       grantdialogFormVisible: false,
       addGrantDialogFormVisible: false,
+      editGrantDialogFormVisible: false,
       // 角色列表数据
       rolesListData: [],
       // 分配权限数据
@@ -172,11 +207,18 @@ export default {
         label: 'authName'
       },
       roleId: '',
+      // 添加角色
       addGrantRoles: {
         roleName: '',
         roleDesc: ''
       },
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      // 编辑角色
+      editGrantRoles: {
+        roleName: '',
+        roleDesc: '',
+        roleId: ''
+      }
     }
   },
   methods: {
@@ -242,7 +284,7 @@ export default {
         }
       })
     },
-    // 添加角色2
+    // 添加角色
     addRole () {
       addRole(this.addGrantRoles)
         .then(res => {
@@ -261,6 +303,31 @@ export default {
             })
           }
         })
+    },
+    // 显示编辑角色弹框
+    handleEdit (data) {
+      // console.log(data)
+      this.editGrantRoles = data
+      // console.log(this.editGrantRoles)
+      this.editGrantDialogFormVisible = true
+    },
+    // 提交编辑角色信息
+    editRole () {
+      editRole(this.editGrantRoles).then(res => {
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          this.editGrantDialogFormVisible = false
+          this.init()
+        } else {
+          this.$message({
+            message: res.meta.msg,
+            type: 'error'
+          })
+        }
+      })
     }
   },
   mounted () {
