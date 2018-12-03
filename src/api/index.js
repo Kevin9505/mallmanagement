@@ -109,3 +109,10 @@ export const getGrantList = () => {
       return results.data
     })
 }
+// 角色授权
+export const grantRolesById = (roleId, rids) => {
+  return axios.post(`roles/${roleId}/rights`, {rids})
+    .then((results) => {
+      return results.data
+    })
+}

@@ -94,6 +94,7 @@
       <!-- default-expanded-keys 默认展开节点  default-checked-keys 默认选中点 -->
       <div class="box">
         <el-tree
+          ref="tree"
           :data="grantRolesTreeData"
           show-checkbox
           node-key="id"
@@ -110,7 +111,7 @@
         <el-button @click="grantdialogFormVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="grantdialogFormVisible = false"
+          @click="grantRolesSubmit"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -118,7 +119,7 @@
 </template>
 
 <script>
-import { getUserRolesList, getGrantList } from '@/api'
+import { getUserRolesList, getGrantList, grantRolesById } from '@/api'
 
 export default {
   data () {
@@ -134,7 +135,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'authName'
-      }
+      },
+      roleId: ''
     }
   },
   methods: {
@@ -147,8 +149,10 @@ export default {
         }
       })
     },
+    // 分配权限数据的展示
     handleGrantRoles (data) {
       // console.log(data)
+      this.roleId = data.id
       this.grantdialogFormVisible = true
       getGrantList().then(res => {
         // console.log(res)
@@ -171,6 +175,33 @@ export default {
           })
         }
       })
+    },
+    // 角色分配权限
+    grantRolesSubmit () {
+      var checkNode = this.$refs.tree.getCheckedNodes()
+      var checkNodeId = checkNode.map((item, index) => {
+        return item.id + ',' + item.pid
+      })
+      var joinStr = checkNodeId.join(',')
+      var setStr = Array.from(new Set(joinStr.split(',')))
+      var finaRid = setStr.join(',')
+      // console.log(this.roleId)
+      grantRolesById(this.roleId, finaRid)
+        .then(res => {
+          // console.log(res)
+          if (res.meta.status === 200) {
+            this.$message({
+              message: res.meta.msg,
+              type: 'success'
+            })
+            this.grantdialogFormVisible = false
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: 'error'
+            })
+          }
+        })
     }
   },
   mounted () {
