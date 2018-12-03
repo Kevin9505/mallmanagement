@@ -11,7 +11,7 @@
       <el-button
         type="success"
         plain
-        @click="rolesdialogFormVisible=true"
+        @click="addGrantDialogFormVisible=true"
       >添加角色</el-button>
     </div>
     <!-- 角色信息展示列表 -->
@@ -115,6 +115,40 @@
         >确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 添加角色 -->
+    <el-dialog
+      title="添加角色"
+      :visible.sync="addGrantDialogFormVisible"
+    >
+      <el-form :model="addGrantRoles" :label-width="formLabelWidth">
+        <el-form-item
+          label="角色名称"
+        >
+          <el-input
+            v-model="addGrantRoles.roleName"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="角色描述"
+        >
+          <el-input
+            v-model="addGrantRoles.roleDesc"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="addGrantDialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="dialogFormVisible = false"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -126,6 +160,7 @@ export default {
     return {
       rolesdialogFormVisible: false,
       grantdialogFormVisible: false,
+      addGrantDialogFormVisible: false,
       // 角色列表数据
       rolesListData: [],
       // 分配权限数据
@@ -136,7 +171,12 @@ export default {
         children: 'children',
         label: 'authName'
       },
-      roleId: ''
+      roleId: '',
+      addGrantRoles: {
+        roleName: '',
+        roleDesc: ''
+      },
+      formLabelWidth: '120px'
     }
   },
   methods: {
@@ -186,22 +226,21 @@ export default {
       var setStr = Array.from(new Set(joinStr.split(',')))
       var finaRid = setStr.join(',')
       // console.log(this.roleId)
-      grantRolesById(this.roleId, finaRid)
-        .then(res => {
-          // console.log(res)
-          if (res.meta.status === 200) {
-            this.$message({
-              message: res.meta.msg,
-              type: 'success'
-            })
-            this.grantdialogFormVisible = false
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: 'error'
-            })
-          }
-        })
+      grantRolesById(this.roleId, finaRid).then(res => {
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          this.grantdialogFormVisible = false
+        } else {
+          this.$message({
+            message: res.meta.msg,
+            type: 'error'
+          })
+        }
+      })
     }
   },
   mounted () {
