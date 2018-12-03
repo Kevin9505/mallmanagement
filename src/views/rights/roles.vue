@@ -181,7 +181,7 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="editGrantDialogFormVisible = false">取 消</el-button>
+        <el-button @click="cancelEditRole('editGrantRoles')">取 消</el-button>
         <el-button
           type="primary"
           @click="editRole('editGrantRoles')"
@@ -329,8 +329,12 @@ export default {
     handleEdit (data) {
       // console.log(data)
       this.editGrantRoles = data
-      // console.log(this.editGrantRoles)
       this.editGrantDialogFormVisible = true
+    },
+    // 取消编辑
+    cancelEditRole (formName) {
+      this.editGrantDialogFormVisible = false
+      this.$refs[formName].resetFields()
     },
     // 提交编辑角色信息
     editRole (formName) {
