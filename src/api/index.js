@@ -132,3 +132,11 @@ export const editRole = (params) => {
       return results.data
     })
 }
+
+// 删除角色、
+export const deleteRole = (id) => {
+  return axios.delete(`roles/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}
