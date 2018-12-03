@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column
           label="描述"
-          prop="roleName"
+          prop="roleDesc"
         >
         </el-table-column>
         <el-table-column label="操作">
@@ -145,7 +145,7 @@
         <el-button @click="addGrantDialogFormVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="dialogFormVisible = false"
+          @click="addRole"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -153,7 +153,7 @@
 </template>
 
 <script>
-import { getUserRolesList, getGrantList, grantRolesById } from '@/api'
+import { getUserRolesList, getGrantList, grantRolesById, addRole } from '@/api'
 
 export default {
   data () {
@@ -241,6 +241,26 @@ export default {
           })
         }
       })
+    },
+    // 添加角色2
+    addRole () {
+      addRole(this.addGrantRoles)
+        .then(res => {
+          console.log(res)
+          if (res.meta.status === 201) {
+            this.$message({
+              message: res.meta.msg,
+              type: 'success'
+            })
+            this.addGrantDialogFormVisible = false
+            this.init()
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: 'error'
+            })
+          }
+        })
     }
   },
   mounted () {

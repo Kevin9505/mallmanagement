@@ -116,3 +116,11 @@ export const grantRolesById = (roleId, rids) => {
       return results.data
     })
 }
+
+// 添加角色
+export const addRole = (params) => {
+  return axios.post(`roles`, params)
+    .then((results) => {
+      return results.data
+    })
+}
