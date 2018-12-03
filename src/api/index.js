@@ -102,4 +102,10 @@ export const getRightsList = () => {
     })
 }
 
-// 获取
+// 获取所有权限的数据
+export const getGrantList = () => {
+  return axios.get(`rights/tree`)
+    .then((results) => {
+      return results.data
+    })
+}

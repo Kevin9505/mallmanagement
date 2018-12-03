@@ -42,69 +42,133 @@
         >
         </el-table-column>
         <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="编辑"
-                placement="top"
-              >
-                <el-button
-                  type="primary"
-                  plain
-                  class="el-icon-edit"
-                  @click="handleEdit(scope.row)"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="删除"
-                placement="top"
-              >
-                <el-button
-                  plain
-                  type="danger"
-                  class="el-icon-delete"
-                  @click="handleDelete(scope.row.id)"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="授权角色"
-                placement="top"
-              >
-                <el-button
-                  plain
-                  type="success"
-                  class="el-icon-check"
-                  @click="handleImpower(scope.row)"
-                ></el-button>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <template slot-scope="scope">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="编辑"
+              placement="top"
+            >
+              <el-button
+                type="primary"
+                plain
+                class="el-icon-edit"
+                @click="handleEdit(scope.row)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="删除"
+              placement="top"
+            >
+              <el-button
+                plain
+                type="danger"
+                class="el-icon-delete"
+                @click="handleDelete(scope.row.id)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="授权角色"
+              placement="top"
+            >
+              <el-button
+                plain
+                type="success"
+                class="el-icon-check"
+                @click="handleGrantRoles(scope.row)"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
     </template>
+    <!-- 授权角色弹框 -->
+    <el-dialog
+      title="分配权限"
+      :visible.sync="grantdialogFormVisible"
+    >
+      <!-- default-expanded-keys 默认展开节点  default-checked-keys 默认选中点 -->
+      <div class="box">
+        <el-tree
+          :data="grantRolesTreeData"
+          show-checkbox
+          node-key="id"
+          :default-checked-keys="defaultcheckedkeys"
+          :props="defaultProps"
+          :default-expand-all="true"
+        >
+        </el-tree>
+      </div>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="grantdialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="grantdialogFormVisible = false"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserRolesList } from '@/api'
+import { getUserRolesList, getGrantList } from '@/api'
 
 export default {
   data () {
     return {
       rolesdialogFormVisible: false,
-      rolesListData: []
+      grantdialogFormVisible: false,
+      // 角色列表数据
+      rolesListData: [],
+      // 分配权限数据
+      grantRolesTreeData: [],
+      // 默认选中的节点
+      defaultcheckedkeys: [],
+      defaultProps: {
+        children: 'children',
+        label: 'authName'
+      }
     }
   },
   methods: {
+    // 页面数据渲染
     init () {
       getUserRolesList().then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.rolesListData = res.data
+        }
+      })
+    },
+    handleGrantRoles (data) {
+      // console.log(data)
+      this.grantdialogFormVisible = true
+      getGrantList().then(res => {
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.grantRolesTreeData = res.data
+        }
+      })
+      // 在获取当前角色的权限时,先清空
+      this.defaultcheckedkeys.length = 0
+      // 获取当前角色的所有权限
+      data.children.forEach((first, index) => {
+        // 判断是否存在且长度大于0
+        if (first.children && first.children.length !== 0) {
+          first.children.forEach((second, index) => {
+            if (second.children && second.children.length !== 0) {
+              second.children.forEach((third, index) => {
+                this.defaultcheckedkeys.push(third.id)
+              })
+            }
+          })
         }
       })
     }
@@ -116,4 +180,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.roles {
+}
+.box {
+  height: 280px;
+  overflow: auto;
+}
 </style>
