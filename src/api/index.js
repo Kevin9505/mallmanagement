@@ -93,3 +93,11 @@ export const getUserById = (id) => {
       return results.data
     })
 }
+
+// 获取全部权限数据
+export const getRightsList = () => {
+  return axios.get(`rights/list`)
+    .then((results) => {
+      return results.data
+    })
+}

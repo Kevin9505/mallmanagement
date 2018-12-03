@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">用户管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索内容 -->
@@ -320,17 +320,12 @@ export default {
       },
       // 用户角色信息
       rolesList: [],
+      // 授权弹框的页面布局信息
       grantform: {
         id: '',
         rid: '',
         username: ''
       },
-      // 控制添加提示框的显示
-      adddialogFormVisible: false,
-      // 控制编辑用户提示框的显示
-      editdialogFormVisible: false,
-      // 控制授权角色提示框的显示
-      grantdialogFormVisible: false,
       // 添加用户数据
       addForm: {
         username: '',
@@ -346,6 +341,12 @@ export default {
         mobile: ''
       },
       formLabelWidth: '120px',
+      // 控制添加提示框的显示
+      adddialogFormVisible: false,
+      // 控制编辑用户提示框的显示
+      editdialogFormVisible: false,
+      // 控制授权角色提示框的显示
+      grantdialogFormVisible: false,
       // 验证规则
       rules: {
         username: [
@@ -366,6 +367,7 @@ export default {
     }
   },
   mounted () {
+    // 页面加载时渲染页面数据
     this.init()
   },
   methods: {
@@ -423,7 +425,7 @@ export default {
         }
       })
     },
-    // 编辑用户
+    // 编辑用户信息弹框
     handleEdit (data) {
       this.editdialogFormVisible = true
       // console.log(data)
@@ -432,12 +434,13 @@ export default {
       this.editForm.mobile = data.mobile
       this.editForm.email = data.email
     },
+    // 提交编辑用户信息
     editUserForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // console.log(this.editForm)
           editUser(this.editForm).then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.meta.status === 200) {
               this.editdialogFormVisible = false
               this.$message({
@@ -448,7 +451,7 @@ export default {
             } else {
               this.$message({
                 message: res.meta.msg,
-                type: 'success'
+                type: 'error'
               })
             }
           })
@@ -481,10 +484,6 @@ export default {
               })
             }
           })
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
         })
         .catch(() => {
           this.$message({
@@ -495,9 +494,9 @@ export default {
     },
     // 修改用户状态
     changeUserState (data) {
-      console.log(data)
+      // console.log(data)
       changeUserState(data.id, data.mg_state).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.$message({
             message: res.meta.msg,
@@ -509,13 +508,13 @@ export default {
             message: res.meta.msg,
             type: 'error'
           })
-          // this.init()
         }
       })
     },
     // 授权角色提示框
     handleImpower (data) {
       // console.log(data)
+      // 重构页面数据
       this.grantform.username = data.username
       this.grantform.id = data.id
       this.grantform.rid = data.role_name
@@ -527,10 +526,9 @@ export default {
           // 根据用户的id 获取用户的角色信息
           getUserById(this.grantform.id).then(results => {
             // console.log(results)
+            // 判断 rid 是否 为 -1 或 0
             if (results.data.rid <= 0) {
               this.grantform.rid = '请选择'
-            } else {
-              this.grantform.rid = results.data.rid
             }
           })
         }
