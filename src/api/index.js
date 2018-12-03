@@ -101,3 +101,5 @@ export const getRightsList = () => {
       return results.data
     })
 }
+
+// 获取
