@@ -120,18 +120,22 @@
       title="添加角色"
       :visible.sync="addGrantDialogFormVisible"
     >
-      <el-form :model="addGrantRoles" :label-width="formLabelWidth">
+      <el-form
+        :model="addGrantRoles"
+        :label-width="formLabelWidth"
+        ref="addGrantRoles"
+        :rules="rules"
+      >
         <el-form-item
           label="角色名称"
+          prop="roleName"
         >
           <el-input
             v-model="addGrantRoles.roleName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          label="角色描述"
-        >
+        <el-form-item label="角色描述">
           <el-input
             v-model="addGrantRoles.roleDesc"
             autocomplete="off"
@@ -145,7 +149,7 @@
         <el-button @click="addGrantDialogFormVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="addRole"
+          @click="addRole(addGrantRoles)"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -154,18 +158,18 @@
       title="编辑角色"
       :visible.sync="editGrantDialogFormVisible"
     >
-      <el-form :model="editGrantRoles" :label-width="formLabelWidth">
-        <el-form-item
-          label="角色名称"
-        >
+      <el-form
+        :model="editGrantRoles"
+        :label-width="formLabelWidth"
+        ref="editGrantRoles"
+      >
+        <el-form-item label="角色名称">
           <el-input
             v-model="editGrantRoles.roleName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          label="角色描述"
-        >
+        <el-form-item label="角色描述">
           <el-input
             v-model="editGrantRoles.roleDesc"
             autocomplete="off"
@@ -179,7 +183,7 @@
         <el-button @click="editGrantDialogFormVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="editRole"
+          @click="editRole('editGrantRoles')"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -218,6 +222,12 @@ export default {
         roleName: '',
         roleDesc: '',
         roleId: ''
+      },
+      // 验证规则
+      rules: {
+        roleName: [
+          { required: true, message: '请输入角色名', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -312,20 +322,31 @@ export default {
       this.editGrantDialogFormVisible = true
     },
     // 提交编辑角色信息
-    editRole () {
-      editRole(this.editGrantRoles).then(res => {
-        if (res.meta.status === 200) {
-          this.$message({
-            message: res.meta.msg,
-            type: 'success'
+    editRole (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          editRole(this.editGrantRoles).then(res => {
+            if (res.meta.status === 200) {
+              console.log(res)
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+              this.editGrantDialogFormVisible = false
+              this.init()
+            } else {
+              this.$message({
+                message: res.meta.msg,
+                type: 'error'
+              })
+            }
           })
-          this.editGrantDialogFormVisible = false
-          this.init()
         } else {
           this.$message({
-            message: res.meta.msg,
+            message: '检查输入内容是否有误呢',
             type: 'error'
           })
+          return false
         }
       })
     },
@@ -366,8 +387,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.roles {
-}
 .box {
   height: 280px;
   overflow: auto;
