@@ -32,6 +32,7 @@
                   <el-tag
                     closable
                     type="success"
+                    @close="closeGrant(scope.row,first.id)"
                   >
                     {{first.authName}}
                   </el-tag>
@@ -48,6 +49,7 @@
                         <el-tag
                           closable
                           type="info"
+                          @close="closeGrant(scope.row,second.id)"
                         >
                           {{second.authName}}
                         </el-tag>
@@ -60,6 +62,7 @@
                           type="warning"
                           v-for="third in second.children"
                           :key="third.id"
+                          @close="closeGrant(scope.row,third.id)"
                         >
                           {{third.authName}}
                         </el-tag>
@@ -247,7 +250,8 @@ import {
   grantRolesById,
   addRole,
   editRole,
-  deleteRole
+  deleteRole,
+  deleteRoleById
 } from '@/api'
 
 export default {
@@ -448,6 +452,23 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    // 移除标签
+    closeGrant (data, id) {
+      deleteRoleById(data.id, id).then(res => {
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+          data.children = res.data
+        } else {
+          this.$message({
+            message: res.meta.msg,
+            type: 'error'
+          })
+        }
+      })
     }
   },
   mounted () {

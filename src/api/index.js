@@ -117,6 +117,14 @@ export const grantRolesById = (roleId, rids) => {
     })
 }
 
+// 删除角色指令权限
+export const deleteRoleById = (roleId, rightId) => {
+  return axios.delete(`roles/${roleId}/rights/${rightId}`)
+    .then((results) => {
+      return results.data
+    })
+}
+
 // 添加角色
 export const addRole = (params) => {
   return axios.post(`roles`, params)
