@@ -109,7 +109,40 @@ import { login } from './api/index/js'
   </script>
  
 ```
-# 数组去重
+# 实现角色授权提交
+```js
+  grantRolesSubmit () {
+    // 通过 element 提供的 this.$refs.tree.getCheckedNodes() 方法获取选中节点的 id 
+    var checkNode = this.$refs.tree.getCheckedNodes()
+    // 通过 array.map((item,index) => { return ... }) 遍历对象数组
+    var checkNodeId = checkNode.map((item, index) => {
+      return item.id + ',' + item.pid   // ["105,104,101","116,104,101"]
+    })
+    // 通过 array.join(',') 方法将数组转换为字符串
+    var joinStr = checkNodeId.join(',')
+    // 通过 new Set() 去除重复字符, 利用 Array.from() 将 Set结构转换为数组 str.split(',') 将字符串转为数组
+    var setStr = Array.from(new Set(joinStr.split(',')))
+    var finaRid = setStr.join(',')
+    // console.log(this.roleId)
+    // 发送请求
+    grantRolesById(this.roleId, finaRid).then(res => {
+      // console.log(res)
+      if (res.meta.status === 200) {
+        this.$message({
+          message: res.meta.msg,
+          type: 'success'
+        })
+        this.grantdialogFormVisible = false
+      } else {
+        this.$message({
+          message: res.meta.msg,
+          type: 'error'
+        })
+      }
+    })
+  }
+
+```
 
 
 
