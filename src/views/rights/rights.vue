@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     init () {
-      getRightsList().then(res => {
+      getRightsList('list').then(res => {
         console.log(res)
         if (res.meta.status === 200) {
           this.rightsList = res.data

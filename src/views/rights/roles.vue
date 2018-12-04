@@ -192,7 +192,7 @@
 </template>
 
 <script>
-import { getUserRolesList, getGrantList, grantRolesById, addRole, editRole, deleteRole } from '@/api'
+import { getUserRolesList, getRightsList, grantRolesById, addRole, editRole, deleteRole } from '@/api'
 
 export default {
   data () {
@@ -247,7 +247,7 @@ export default {
       // console.log(data)
       this.roleId = data.id
       this.grantdialogFormVisible = true
-      getGrantList().then(res => {
+      getRightsList('tree').then(res => {
         // console.log(res)
         if (res.meta.status === 200) {
           this.grantRolesTreeData = res.data

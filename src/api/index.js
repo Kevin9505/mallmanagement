@@ -95,20 +95,20 @@ export const getUserById = (id) => {
 }
 
 // 获取全部权限数据
-export const getRightsList = () => {
-  return axios.get(`rights/list`)
+export const getRightsList = (type) => {
+  return axios.get(`rights/${type}`)
     .then((results) => {
       return results.data
     })
 }
 
 // 获取所有权限的数据
-export const getGrantList = () => {
-  return axios.get(`rights/tree`)
-    .then((results) => {
-      return results.data
-    })
-}
+// export const getGrantList = () => {
+//   return axios.get(`rights/tree`)
+//     .then((results) => {
+//       return results.data
+//     })
+// }
 // 角色授权
 export const grantRolesById = (roleId, rids) => {
   return axios.post(`roles/${roleId}/rights`, {rids})
