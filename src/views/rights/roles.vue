@@ -23,7 +23,53 @@
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <span>这里是展开数据显示区</span>
+            <el-row
+              v-for="first in scope.row.children"
+              :key="first.id"
+            >
+              <el-col :span="4">
+                <div class="grid-content bg-purple">
+                  <el-tag
+                    closable
+                    type="success"
+                  >
+                    {{first.authName}}
+                  </el-tag>
+                </div>
+              </el-col>
+              <el-col :span="20">
+                <div class="grid-content bg-purple-light">
+                  <el-row
+                    v-for="second in first.children"
+                    :key="second.id"
+                  >
+                    <el-col :span="4">
+                      <div class="grid-content bg-purple">
+                        <el-tag
+                          closable
+                          type="info"
+                        >
+                          {{second.authName}}
+                        </el-tag>
+                      </div>
+                    </el-col>
+                    <el-col :span="20">
+                      <div class="grid-content bg-purple-light">
+                        <el-tag
+                          closable
+                          type="warning"
+                          v-for="third in second.children"
+                          :key="third.id"
+                        >
+                          {{third.authName}}
+                        </el-tag>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-col>
+            </el-row>
+            <span v-show="scope.row.children.length === 0">还没相关权限呢，是不是要去分配下呢！！</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -164,7 +210,10 @@
         ref="editGrantRoles"
         :rules="rules"
       >
-        <el-form-item label="角色名称" prop="roleName">
+        <el-form-item
+          label="角色名称"
+          prop="roleName"
+        >
           <el-input
             v-model="editGrantRoles.roleName"
             autocomplete="off"
@@ -192,7 +241,14 @@
 </template>
 
 <script>
-import { getUserRolesList, getRightsList, grantRolesById, addRole, editRole, deleteRole } from '@/api'
+import {
+  getUserRolesList,
+  getRightsList,
+  grantRolesById,
+  addRole,
+  editRole,
+  deleteRole
+} from '@/api'
 
 export default {
   data () {
@@ -226,9 +282,7 @@ export default {
       },
       // 验证规则
       rules: {
-        roleName: [
-          { required: true, message: '请输入角色名', trigger: 'blur' }
-        ]
+        roleName: [{ required: true, message: '请输入角色名', trigger: 'blur' }]
       }
     }
   },
@@ -297,25 +351,24 @@ export default {
     },
     // 添加角色
     addRole (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          addRole(this.addGrantRoles)
-            .then(res => {
-              console.log(res)
-              if (res.meta.status === 201) {
-                this.$message({
-                  message: res.meta.msg,
-                  type: 'success'
-                })
-                this.addGrantDialogFormVisible = false
-                this.init()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: 'error'
-                })
-              }
-            })
+          addRole(this.addGrantRoles).then(res => {
+            console.log(res)
+            if (res.meta.status === 201) {
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+              this.addGrantDialogFormVisible = false
+              this.init()
+            } else {
+              this.$message({
+                message: res.meta.msg,
+                type: 'error'
+              })
+            }
+          })
         } else {
           this.$message({
             message: '检查输入是否为空呢',
@@ -338,7 +391,7 @@ export default {
     },
     // 提交编辑角色信息
     editRole (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           editRole(this.editGrantRoles).then(res => {
             if (res.meta.status === 200) {
@@ -371,28 +424,30 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        deleteRole(id).then(res => {
-          // console.log(res)
-          if (res.meta.status === 200) {
-            this.$message({
-              message: res.meta.msg,
-              type: 'success'
-            })
-            this.init()
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: 'error'
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
+        .then(() => {
+          deleteRole(id).then(res => {
+            // console.log(res)
+            if (res.meta.status === 200) {
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+              this.init()
+            } else {
+              this.$message({
+                message: res.meta.msg,
+                type: 'error'
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   },
   mounted () {
@@ -405,5 +460,9 @@ export default {
 .box {
   height: 280px;
   overflow: auto;
+}
+.el-tag {
+  margin-bottom: 10px;
+  margin-right: 5px;
 }
 </style>
