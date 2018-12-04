@@ -92,6 +92,7 @@ import { login } from './api/index/js'
     methods: {
       // 提交表单
       submitForm(formName) {
+        // 通过 this.$refs[formName].validate((valid) => { if(valid){} } 判断输入是否1为空
         this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!');
@@ -143,6 +144,23 @@ import { login } from './api/index/js'
   }
 
 ```
+# 获取节点树中选中的节点
+```js
+  // 获取当前角色的所有权限 data 传过来的数据
+  data.children.forEach((first, index) => {
+    // 判断是否存在且长度大于0
+    if (first.children && first.children.length !== 0) {
+      first.children.forEach((second, index) => {
+        if (second.children && second.children.length !== 0) {
+          second.children.forEach((third, index) => {
+            this.defaultcheckedkeys.push(third.id)
+          })
+        }
+      })
+    }
+  })
+```
+
 
 
 
