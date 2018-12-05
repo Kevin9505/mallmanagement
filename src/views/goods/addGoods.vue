@@ -85,7 +85,32 @@
           <el-tab-pane
             label="商品图片"
             name="3"
-          >商品图片</el-tab-pane>
+          >
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :file-list="goodPic"
+              list-type="picture"
+            >
+              <el-button
+                size="small"
+                type="primary"
+              >点击上传</el-button>
+              <div
+                slot="tip"
+                class="el-upload__tip"
+              >只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+            <!-- 图片预览提示框 -->
+            <el-dialog
+              title="图片预览"
+              :visible.sync="catePicdialogFormVisible"
+            >
+              <img src="" alt="">
+            </el-dialog>
+          </el-tab-pane>
           <el-tab-pane
             label="商品内容"
             name="4"
@@ -96,11 +121,12 @@
   </div>
 </template>
 <script>
-import {getCateData} from '@/api'
+import { getCateData } from '@/api'
 export default {
   data () {
     return {
       active: '0',
+      catePicdialogFormVisible: false,
       // 添加商品数据
       addGoodData: {
         goods_name: '',
@@ -120,6 +146,8 @@ export default {
       // 分类数据
       cateListData: [],
       selectedCate: [],
+      // 上传图片
+      goodPic: [],
       // 验证规则
       rules: {
         goods_name: [
@@ -150,11 +178,20 @@ export default {
     // 获取商品分类数据
     init () {
       getCateData().then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.cateListData = res.data
         }
       })
+    },
+    // 移除图片
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    // 预览图片
+    handlePreview (file) {
+      console.log(file)
+      this.catePicdialogFormVisible = true
     }
   },
   mounted () {
