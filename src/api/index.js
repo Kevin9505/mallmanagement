@@ -164,3 +164,11 @@ export const getListData = (params) => {
       return results.data
     })
 }
+
+// 获取商品分类数据列表
+export const getCateData = () => {
+  return axios.get(`categories`)
+    .then((results) => {
+      return results.data
+    })
+}

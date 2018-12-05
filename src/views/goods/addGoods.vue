@@ -1,13 +1,166 @@
 <template>
   <div class="addGoods">
-    添加商品
+    <el-card class="box-card">
+      <!-- 进度条 -->
+      <el-steps
+        :active="active-0"
+        finish-status="success"
+      >
+        <el-step title="基本信息"></el-step>
+        <el-step title="商品参数"></el-step>
+        <el-step title="商品属性"></el-step>
+        <el-step title="商品图片"></el-step>
+        <el-step title="商品内容"></el-step>
+        <el-step title="完成"></el-step>
+      </el-steps>
+      <!-- tab栏 -->
+      <template>
+        <el-tabs
+          style="margin-top:30px;"
+          v-model="active"
+          @tab-click="handleClick"
+          tab-position="left"
+        >
+          <el-tab-pane
+            label="基本信息"
+            name="0"
+          >
+            <el-form
+              :model="addGoodData"
+              :rules="rules"
+              ref="ruleForm"
+              label-width="100px"
+              class="demo-ruleForm"
+            >
+              <el-form-item
+                label="商品名称"
+                prop="goods_name"
+              >
+                <el-input v-model="addGoodData.goods_name"></el-input>
+              </el-form-item>
+              <el-form-item
+                label="商品价格"
+                prop="goods_price"
+              >
+                <el-input v-model="addGoodData.goods_price"></el-input>
+              </el-form-item>
+              <el-form-item
+                label="商品重量"
+                prop="goods_weight"
+              >
+                <el-input v-model="addGoodData.goods_weight"></el-input>
+              </el-form-item>
+              <el-form-item
+                label="商品数量"
+                prop="goods_number"
+              >
+                <el-input
+                  type="number"
+                  v-model="addGoodData.goods_number"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                label="商品分类"
+                prop="goods_cat"
+              >
+                <el-cascader
+                  :clearable=true
+                  :options="cateListData"
+                  v-model="selectedCate"
+                  @change="handleChange"
+                  :props="cateProps"
+                >
+                </el-cascader>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+          <el-tab-pane
+            label="商品参数"
+            name="1"
+          >商品参数</el-tab-pane>
+          <el-tab-pane
+            label="商品属性"
+            name="2"
+          >商品属性</el-tab-pane>
+          <el-tab-pane
+            label="商品图片"
+            name="3"
+          >商品图片</el-tab-pane>
+          <el-tab-pane
+            label="商品内容"
+            name="4"
+          >商品内容</el-tab-pane>
+        </el-tabs>
+      </template>
+    </el-card>
   </div>
 </template>
 <script>
+import {getCateData} from '@/api'
 export default {
-
+  data () {
+    return {
+      active: '0',
+      // 添加商品数据
+      addGoodData: {
+        goods_name: '',
+        goods_cat: '',
+        goods_price: '',
+        goods_number: '',
+        goods_weight: '',
+        goods_introduce: '',
+        pics: '',
+        attrs: ''
+      },
+      cateProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
+      },
+      // 分类数据
+      cateListData: [],
+      selectedCate: [],
+      // 验证规则
+      rules: {
+        goods_name: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
+        ],
+        goods_cat: [{ required: true, message: '请输入分类', trigger: 'blur' }],
+        goods_price: [
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
+        ],
+        goods_number: [
+          { required: true, message: '请输入商品数量', trigger: 'blur' }
+        ],
+        goods_weight: [
+          { required: true, message: '请输入商品重量', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // tab栏
+    handleClick (tab, event) {
+      // console.log(tab, event)
+    },
+    // 分类
+    handleChange (value) {
+      console.log(value)
+    },
+    // 获取商品分类数据
+    init () {
+      getCateData().then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.cateListData = res.data
+        }
+      })
+    }
+  },
+  mounted () {
+    this.init()
+  }
 }
 </script>
 <style lang="scss" scoped>
-
 </style>

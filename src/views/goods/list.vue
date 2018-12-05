@@ -18,6 +18,7 @@
         <el-button
           type="success"
           plain
+          @click="$router.push('addGoods')"
         >添加商品</el-button>
       </template>
       <!-- 商品列表 -->
@@ -101,16 +102,7 @@ export default {
       pagenum: 1,
       pagesize: 10,
       total: 5,
-      listData: [
-        // goods_name: '',
-        // goods_cat: '',
-        // goods_price: '',
-        // goods_number: '',
-        // goods_weight: '',
-        // goods_introduce: '',
-        // pics: '',
-        // attrs: ''
-      ]
+      listData: []
     }
   },
   methods: {
