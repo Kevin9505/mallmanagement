@@ -67,7 +67,7 @@ export default {
               // 登录成功后存储 token
               sessionStorage.setItem('userToken', res.data.token)
               // 登录成功后跳转到主页
-              this.$router.push({ path: '/home' })
+              this.$router.push({ path: '/' })
             } else {
               // 登录失败提示用户
               this.$message.error(res.meta.msg)

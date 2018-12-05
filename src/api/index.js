@@ -148,3 +148,11 @@ export const deleteRole = (id) => {
       return results.data
     })
 }
+
+// 左侧菜单权限
+export const getLeftMenu = () => {
+  return axios.get(`menus`)
+    .then((results) => {
+      return results.data
+    })
+}

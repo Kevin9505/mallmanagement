@@ -14,28 +14,28 @@ export default new Router({
     name: 'Login',
     component: Login
   },
+  // {
+  //   path: '/',
+  //   redirect: {
+  //     path: '/login'
+  //   }
+  // },
   {
     path: '/',
-    redirect: {
-      path: '/login'
-    }
-  },
-  {
-    path: '/home',
     name: 'Home',
     component: Home,
     children: [{
-      path: '/user',
+      path: 'users',
       name: 'User',
       component: User
     },
     {
-      path: '/rights',
+      path: 'rights',
       name: 'Rights',
       component: Rights
     },
     {
-      path: '/roles',
+      path: 'roles',
       name: 'Roles',
       component: Roles
     }]

@@ -15,19 +15,19 @@
           :unique-opened="true"
           :router="true"
         >
-          <el-submenu index="1">
+          <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
             <template slot="title">
               <i class="el-icon-setting"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="user">
+            <el-menu-item :index="submenu.path" v-for="submenu in item.children" :key="submenu.id">
               <template slot="title">
                 <i class="el-icon-menu"></i>
-                <span>用户列表</span>
+                <span>{{submenu.authName}}</span>
               </template>
             </el-menu-item>
           </el-submenu>
-          <el-submenu index="2">
+          <!-- <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-info"></i>
               <span>权限管理</span>
@@ -92,7 +92,7 @@
                 <span>数据报表</span>
               </template>
             </el-menu-item>
-          </el-submenu>
+          </el-submenu> -->
         </el-menu>
       </el-aside>
       <el-container>
@@ -114,10 +114,13 @@
   </div>
 </template>
 <script>
+import { getLeftMenu } from '@/api'
+
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      menuList: []
     }
   },
   methods: {
@@ -127,6 +130,14 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
+  },
+  mounted () {
+    getLeftMenu().then(res => {
+      console.log(res)
+      if (res.meta.status === 200) {
+        this.menuList = res.data
+      }
+    })
   }
 }
 </script>
