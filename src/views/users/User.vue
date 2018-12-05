@@ -265,6 +265,7 @@
         <el-form-item label="角色">
           <template>
             <el-select
+              :clearable=true
               v-model="grantform.rid"
               placeholder="请选择"
               @change="getRid"
