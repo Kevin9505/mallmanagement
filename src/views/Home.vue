@@ -20,7 +20,7 @@
               <i class="el-icon-setting"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item :index="submenu.path" v-for="submenu in item.children" :key="submenu.id">
+            <el-menu-item :index="'/'+submenu.path" v-for="submenu in item.children" :key="submenu.id">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{submenu.authName}}</span>
@@ -133,7 +133,7 @@ export default {
   },
   mounted () {
     getLeftMenu().then(res => {
-      console.log(res)
+      // console.log(res)
       if (res.meta.status === 200) {
         this.menuList = res.data
       }

@@ -2,7 +2,7 @@
   <div class="rights">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
       <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -55,7 +55,7 @@ export default {
   methods: {
     init () {
       getRightsList('list').then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.rightsList = res.data
         } else {
