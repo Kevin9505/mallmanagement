@@ -156,3 +156,11 @@ export const getLeftMenu = () => {
       return results.data
     })
 }
+
+// 获取全部商品列表数据
+export const getListData = (params) => {
+  return axios.get(`goods`, {params})
+    .then((results) => {
+      return results.data
+    })
+}
