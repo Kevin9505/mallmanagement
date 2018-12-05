@@ -87,11 +87,14 @@
             name="3"
           >
             <el-upload
+              :headers="getToken()"
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://localhost:8888/api/private/v1/upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              :file-list="goodPic"
+              :on-success="handleSuccess"
+              :file-list="fileList"
+              :before-upload="handleUploadBefore"
               list-type="picture"
             >
               <el-button
@@ -108,7 +111,10 @@
               title="图片预览"
               :visible.sync="catePicdialogFormVisible"
             >
-              <img src="" alt="">
+              <img
+                :src="uerPicSrc"
+                alt=""
+              >
             </el-dialog>
           </el-tab-pane>
           <el-tab-pane
@@ -117,6 +123,11 @@
           >商品内容</el-tab-pane>
         </el-tabs>
       </template>
+      <el-button
+        type="primary"
+        style="float:right;margin-top:10px;"
+        plain
+      >确认添加</el-button>
     </el-card>
   </div>
 </template>
@@ -135,9 +146,14 @@ export default {
         goods_number: '',
         goods_weight: '',
         goods_introduce: '',
-        pics: '',
-        attrs: ''
+        pics: [],
+        attrs: []
       },
+      // 上传图片
+      fileList: [],
+      // 预览图片
+      uerPicSrc: '',
+      // 下拉框
       cateProps: {
         value: 'cat_id',
         label: 'cat_name',
@@ -146,8 +162,6 @@ export default {
       // 分类数据
       cateListData: [],
       selectedCate: [],
-      // 上传图片
-      goodPic: [],
       // 验证规则
       rules: {
         goods_name: [
@@ -167,13 +181,10 @@ export default {
     }
   },
   methods: {
-    // tab栏
-    handleClick (tab, event) {
-      // console.log(tab, event)
-    },
-    // 分类
-    handleChange (value) {
-      console.log(value)
+    // 获取token
+    getToken () {
+      const token = sessionStorage.getItem('userToken')
+      return {'Authorization': token}
     },
     // 获取商品分类数据
     init () {
@@ -184,15 +195,33 @@ export default {
         }
       })
     },
+    // tab栏
+    handleClick (tab, event) {
+      // console.log(tab, event)
+    },
+    // 分类
+    handleChange (value) {
+      console.log(value)
+    },
     // 移除图片
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
     // 预览图片
     handlePreview (file) {
-      console.log(file)
+      console.log(file.response.data.tmp_path)
+      this.uerPicSrc = 'http://localhost:8888/' + file.response.data.tmp_path
+      console.log(this.uerPicSrc)
       this.catePicdialogFormVisible = true
-    }
+    },
+    // 上传成功
+    handleSuccess (response, file, fileList) {
+      // console.log(response)
+      // console.log(file)
+      // console.log(fileList)
+    },
+    // 图片上传之前
+    handleUploadBefore (file) {}
   },
   mounted () {
     this.init()
@@ -200,4 +229,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.box-card {
+  padding: 20px;
+}
 </style>
