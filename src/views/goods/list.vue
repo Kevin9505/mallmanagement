@@ -113,7 +113,7 @@ export default {
         pagenum: this.pagenum,
         pagesize: this.pagesize
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.listData = res.data.goods
           this.total = res.data.total

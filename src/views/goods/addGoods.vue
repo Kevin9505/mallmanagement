@@ -28,7 +28,7 @@
             <el-form
               :model="addGoodData"
               :rules="rules"
-              ref="ruleForm"
+              ref="addGoodForm"
               label-width="100px"
               class="demo-ruleForm"
             >
@@ -61,7 +61,6 @@
               </el-form-item>
               <el-form-item
                 label="商品分类"
-                prop="goods_cat"
               >
                 <el-cascader
                   :clearable=true
@@ -127,6 +126,7 @@
         type="primary"
         style="float:right;margin-top:10px;"
         plain
+        @click="addGoodSubmit('addGoodForm')"
       >确认添加</el-button>
     </el-card>
   </div>
@@ -201,27 +201,55 @@ export default {
     },
     // 分类
     handleChange (value) {
-      console.log(value)
+      this.addGoodData.goods_cat = value.join(',')
+      // console.log(this.addGoodData.goods_cat)
     },
     // 移除图片
     handleRemove (file, fileList) {
-      console.log(file, fileList)
+      // console.log(file)
+      if (!file.response) {
+        return false
+      }
+      const index = this.addGoodData.pics.findIndex((value) => {
+        // console.log(value)
+        // console.log(file.response.data.tmp_path)
+        return value.pic.indexOf(file.response.data.tmp_path) !== -1
+      })
+      this.addGoodData.pics.splice(index, 1)
+      // console.log(this.addGoodData.pics)
     },
     // 预览图片
     handlePreview (file) {
-      console.log(file.response.data.tmp_path)
+      // console.log(file.response.data.tmp_path)
       this.uerPicSrc = 'http://localhost:8888/' + file.response.data.tmp_path
-      console.log(this.uerPicSrc)
+      // console.log(this.uerPicSrc)
       this.catePicdialogFormVisible = true
     },
     // 上传成功
     handleSuccess (response, file, fileList) {
       // console.log(response)
+      this.addGoodData.pics.push({'pic': '/' + response.data.tmp_path})
       // console.log(file)
-      // console.log(fileList)
+      // console.log(this.addGoodData.pics)
     },
     // 图片上传之前
-    handleUploadBefore (file) {}
+    handleUploadBefore (file) {
+      // console.log(file)
+      if (file.size > 500 * 1024) {
+        this.$message.error('图片大小超过指定范围')
+        return false
+      }
+    },
+    // 确认添加商品
+    addGoodSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(this.addGoodData)
+        } else {
+          this.$message.error('错了哦，请检查输入是否为空哦！')
+        }
+      })
+    }
   },
   mounted () {
     this.init()
