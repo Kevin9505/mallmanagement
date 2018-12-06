@@ -180,3 +180,11 @@ export const addGood = (params) => {
       return results.data
     })
 }
+
+// 删除商品
+export const deleteGoodById = (id) => {
+  return axios.delete(`goods/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}

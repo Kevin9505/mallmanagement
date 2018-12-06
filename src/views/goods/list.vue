@@ -71,7 +71,7 @@
                 size="mini"
                 type="danger"
                 icon="el-icon-delete"
-                @click="handleDelete(scope.$index, scope.row)"
+                @click="handleDelete(scope.row)"
               ></el-button>
             </template>
           </el-table-column>
@@ -93,7 +93,7 @@
   </div>
 </template>
 <script>
-import { getListData } from '@/api'
+import { getListData, deleteGoodById } from '@/api'
 
 export default {
   data () {
@@ -135,6 +135,18 @@ export default {
     // 搜索对应的商品
     searchGoods () {
       this.init()
+    },
+    // 根据商品id删除商品
+    handleDelete (data) {
+      console.log(data.goods_id)
+      deleteGoodById(data.goods_id).then(res => {
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          this.init()
+        } else {
+          this.$message.error(res.meta.msg)
+        }
+      })
     }
   },
   mounted () {
