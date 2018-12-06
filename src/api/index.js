@@ -172,3 +172,11 @@ export const getCateData = () => {
       return results.data
     })
 }
+
+// 添加商品
+export const addGood = (params) => {
+  return axios.post(`goods`, params)
+    .then((results) => {
+      return results.data
+    })
+}

@@ -120,7 +120,7 @@
           >
             <template>
               <quill-editor
-                v-model="goods_introduce"
+                v-model="addGoodData.goods_introduce"
                 ref="myQuillEditor"
                 :options="editorOption"
                 @blur="onEditorBlur($event)"
@@ -142,7 +142,7 @@
   </div>
 </template>
 <script>
-import { getCateData } from '@/api'
+import { getCateData, addGood } from '@/api'
 export default {
   data () {
     return {
@@ -256,7 +256,14 @@ export default {
     addGoodSubmit (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.addGoodData)
+          addGood(this.addGoodData).then(res => {
+            if (res.meta.status === 201) {
+              this.$message.success(res.meta.msg)
+              this.$router.push({path: 'list'})
+            } else {
+              this.$message.error(res.meta.msg)
+            }
+          })
         } else {
           this.$message.error('错了哦，请检查输入是否为空哦！')
         }
