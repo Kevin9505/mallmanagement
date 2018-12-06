@@ -3,6 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+// 引入富文本组件
+import VueQuillEditeor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 // 引入element-ui
 import ElementUI from 'element-ui'
@@ -10,6 +15,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 导入公共样式文件
 import './common/css/index.scss'
 Vue.use(ElementUI)
+Vue.use(VueQuillEditeor)
 
 Vue.config.productionTip = false
 

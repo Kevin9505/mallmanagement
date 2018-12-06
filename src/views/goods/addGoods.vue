@@ -59,9 +59,7 @@
                   v-model="addGoodData.goods_number"
                 ></el-input>
               </el-form-item>
-              <el-form-item
-                label="商品分类"
-              >
+              <el-form-item label="商品分类">
                 <el-cascader
                   :clearable=true
                   :options="cateListData"
@@ -119,7 +117,19 @@
           <el-tab-pane
             label="商品内容"
             name="4"
-          >商品内容</el-tab-pane>
+          >
+            <template>
+              <quill-editor
+                v-model="goods_introduce"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @change="onEditorChange($event)"
+              >
+              </quill-editor>
+            </template>
+          </el-tab-pane>
         </el-tabs>
       </template>
       <el-button
@@ -159,6 +169,8 @@ export default {
         label: 'cat_name',
         children: 'children'
       },
+      // 富文本框的数据绑定
+      editorOption: {},
       // 分类数据
       cateListData: [],
       selectedCate: [],
@@ -184,7 +196,7 @@ export default {
     // 获取token
     getToken () {
       const token = sessionStorage.getItem('userToken')
-      return {'Authorization': token}
+      return { Authorization: token }
     },
     // 获取商品分类数据
     init () {
@@ -210,7 +222,7 @@ export default {
       if (!file.response) {
         return false
       }
-      const index = this.addGoodData.pics.findIndex((value) => {
+      const index = this.addGoodData.pics.findIndex(value => {
         // console.log(value)
         // console.log(file.response.data.tmp_path)
         return value.pic.indexOf(file.response.data.tmp_path) !== -1
@@ -228,7 +240,7 @@ export default {
     // 上传成功
     handleSuccess (response, file, fileList) {
       // console.log(response)
-      this.addGoodData.pics.push({'pic': '/' + response.data.tmp_path})
+      this.addGoodData.pics.push({ pic: '/' + response.data.tmp_path })
       // console.log(file)
       // console.log(this.addGoodData.pics)
     },
@@ -242,13 +254,19 @@ export default {
     },
     // 确认添加商品
     addGoodSubmit (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.addGoodData)
         } else {
           this.$message.error('错了哦，请检查输入是否为空哦！')
         }
       })
+    },
+    onEditorBlur () { // 失去焦点事件
+    },
+    onEditorFocus () { // 获得焦点事件
+    },
+    onEditorChange () { // 内容改变事件
     }
   },
   mounted () {
@@ -259,5 +277,11 @@ export default {
 <style lang="scss" scoped>
 .box-card {
   padding: 20px;
+}
+.quill-editor{
+  height: 350px;
+  .ql-container{
+    height: 300px;
+  }
 }
 </style>
