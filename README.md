@@ -189,7 +189,7 @@ import { login } from './api/index/js'
 ` state(一个容器对象，存储Vuex中的state,mutations,actions,getters等) `
 + state(一个保存数据的对象，对象中的数据可以提供所有组件使用)
 ```js
-  // 1. 定义
+  // 1. 定义 使用vuex 数据是一个存储在state中,意味着所有你想操作的数据都存储在这个对象中
   const state = {
     count: 0
   }
@@ -215,7 +215,7 @@ import { login } from './api/index/js'
     })
   }
 ```
-+ mutations (一个对象，保存的是更改state的函数，也只有它能更改state中的值，触发方式this.$store.commit('函数名',参数))
++ mutations (一个对象，保存的是操作state中数据的函数，也只有它能更改state中的值，触发方式this.$store.commit('函数名',参数))
 ```js
   // 1. 定义
   const mutations = {
@@ -241,7 +241,7 @@ import { login } from './api/index/js'
 ```
 + action(一个对象，保存的是触发 mutations 的函数，让mutations去修改state中的值)
 ```js
-  // 1. 定义
+  // 1. 定义 
   const actions = {
     increment: ({ commit }) => commit('increment')
   }
