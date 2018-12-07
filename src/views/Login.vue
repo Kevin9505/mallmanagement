@@ -64,6 +64,11 @@ export default {
           login(this.userForm).then(res => {
             // console.log(res)
             if (res.meta.status === 200) {
+              // 将当前用户名存储到Store中
+              // 如果是直接调用mutations中的函数,那么就应该使用commit, 但是它是同步调用
+              // this.$store.commit('setusername', res.data.username)
+              // 如果想一步的方式调用函数,那么就应该使用dispatch,它是触发actions中的方法
+              this.$store.dispatch('setusernameAction', res.data.username)
               // 登录成功后存储 token
               sessionStorage.setItem('userToken', res.data.token)
               // 登录成功后跳转到主页

@@ -14,6 +14,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // 导入公共样式文件
 import './common/css/index.scss'
+// 引入store.js
+import store from '@/store/store.js'
 Vue.use(ElementUI)
 Vue.use(VueQuillEditeor)
 
@@ -37,6 +39,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

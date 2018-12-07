@@ -103,7 +103,7 @@
           ></div>
           <div class="system-title">电商管理系统</div>
           <div>
-            <span class="welcome">你好: ***</span>
+            <span class="welcome">你好: {{$store.state.username ? $store.state.username:$store.getters.username}}</span>
           </div>
         </el-header>
         <el-main>
