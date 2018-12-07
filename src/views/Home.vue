@@ -104,6 +104,7 @@
           <div class="system-title">电商管理系统</div>
           <div>
             <span class="welcome">你好: {{$store.state.username ? $store.state.username:$store.getters.username}}</span>
+            <el-button type="text" @click="logout">退出</el-button>
           </div>
         </el-header>
         <el-main>
@@ -129,6 +130,12 @@ export default {
     },
     handleClose (key, keyPath) {
       // console.log(key, keyPath)
+    },
+    // 退出登录
+    logout () {
+      console.log(sessionStorage.getItem('userToken'))
+      sessionStorage.removeItem('userToken')
+      this.$router.push({path: '/login'})
     }
   },
   mounted () {

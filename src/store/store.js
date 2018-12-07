@@ -23,7 +23,7 @@ const mutations = {
 const actions = {
   // 触发器: 一个函数的调用会在内部调用其他函数
   setusernameAction: ({commit}, value) => {
-    console.log(value)
+    // console.log(value)
     commit('setusername', value)
   }
 }
