@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { getCateData, addCate } from '@/api'
+import { getCateData, addCate, deleteCate } from '@/api'
 // 导入自定义组件
 import TreeGrid from '@/components/TreeGrid/TreeGrid.vue'
 export default {
@@ -124,7 +124,7 @@ export default {
     showAddCateDialog () {
       getCateData(2).then(res => {
         this.addCatePicdialogFormVisible = true
-        console.log(res)
+        // console.log(res)
         if (res.meta.status === 200) {
           this.cateList = res.data
         } else {
@@ -137,10 +137,10 @@ export default {
       console.log(value)
       if (value.length === 1) {
         this.addCateForm.cat_level = '1'
-        this.addCateForm.cat_pid = value.join(',')
+        this.addCateForm.cat_pid = value[0]
       } else if (value.length === 2) {
         this.addCateForm.cat_level = '2'
-        this.addCateForm.cat_pid = value.join(',')
+        this.addCateForm.cat_pid = value[1]
       }
       // console.log(this.addCateForm.cat_pid)
     },
@@ -151,11 +151,13 @@ export default {
           // console.log(this.addCateForm)
           addCate(this.addCateForm).then(res => {
             console.log(res)
-            if (res.meta.status === 200) {
+            if (res.meta.status === 201) {
               this.$message.success(res.meta.msg)
+              this.init()
               this.addCatePicdialogFormVisible = false
+              this.$refs[formName].resetFields()
             } else {
-              this.$message.success(res.meta.msg)
+              this.$message.error(res.meta.msg)
             }
           })
         } else {
@@ -167,14 +169,34 @@ export default {
     init () {
       getCateData(3).then(res => {
         if (res.meta.status === 200) {
-          console.log(res)
+          // console.log(res)
           this.cateListData = res.data
+        } else {
+          this.$message.error(res.meta.msg)
         }
       })
     },
     // 删除分类
-    deleteCategory () {
-
+    deleteCategory (id) {
+      this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteCate(id).then(res => {
+          if (res.meta.status === 200) {
+            this.$message.success(res.meta.msg)
+            this.init()
+          } else {
+            this.$message.error(res.meta.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 编辑分类
     editCategory () {}

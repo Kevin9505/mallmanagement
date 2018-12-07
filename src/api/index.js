@@ -204,3 +204,11 @@ export const addCate = (params) => {
       return results.data
     })
 }
+
+// 根据 id 删除分类
+export const deleteCate = (id) => {
+  return axios.delete(`categories/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}
