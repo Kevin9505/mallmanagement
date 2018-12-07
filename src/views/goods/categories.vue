@@ -63,6 +63,7 @@ export default {
       formLabelWidth: '120px',
       // 控制添加分类提示框的显示
       addCatePicdialogFormVisible: false,
+      // 添加商品分类的数据
       addCateForm: {
         cat_pid: '0',
         cat_name: '',
@@ -78,6 +79,7 @@ export default {
       },
       // 父级选中项
       CateSelectedOptions: [],
+      // 验证规则
       rules: {
         cat_name: [
           { required: true, message: '请输入分类名称', trigger: 'blur' }
