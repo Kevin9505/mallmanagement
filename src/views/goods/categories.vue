@@ -11,6 +11,16 @@
       plain
       @click="showAddCateDialog"
     >添加分类</el-button>
+    <!-- 分类列表 -->
+    <tree-grid
+      style="margin-top:20px;"
+      :treeStructure="true"
+      :columns="columns"
+      :data-source="cateListData"
+      @deleteCate="deleteCategory"
+      @editCate="editCategory"
+    >
+    </tree-grid>
     <!-- 添加商品分类弹框 -->
     <el-dialog
       title="添加商品分类"
@@ -56,7 +66,13 @@
 </template>
 <script>
 import { getCateData, addCate } from '@/api'
+// 导入自定义组件
+import TreeGrid from '@/components/TreeGrid/TreeGrid.vue'
 export default {
+  // 组件的注册
+  components: {
+    TreeGrid
+  },
   data () {
     return {
       // 输入框的宽度
@@ -69,8 +85,24 @@ export default {
         cat_name: '',
         cat_level: '0'
       },
+      // 分类列表的配置
+      columns: [{
+        text: '分类名称',
+        dataIndex: 'cat_name',
+        width: ''
+      }, {
+        text: '是否有效',
+        dataIndex: 'cat_deleted',
+        width: ''
+      }, {
+        text: '排序',
+        dataIndex: 'cat_level',
+        width: ''
+      }],
       // 分类数据
       cateList: [],
+      // 分类列表数据
+      cateListData: [],
       // 父级分类配置项
       cateOptions: {
         value: 'cat_id',
@@ -130,7 +162,25 @@ export default {
           this.$message.error('错了哦，请检查是否输入有为空哦。')
         }
       })
-    }
+    },
+    // 获取分类列表数据
+    init () {
+      getCateData(3).then(res => {
+        if (res.meta.status === 200) {
+          console.log(res)
+          this.cateListData = res.data
+        }
+      })
+    },
+    // 删除分类
+    deleteCategory () {
+
+    },
+    // 编辑分类
+    editCategory () {}
+  },
+  mounted () {
+    this.init()
   }
 }
 </script>
