@@ -200,7 +200,7 @@ export default {
     },
     // 获取商品分类数据
     init () {
-      getCateData().then(res => {
+      getCateData(3).then(res => {
         // console.log(res)
         if (res.meta.status === 200) {
           this.cateListData = res.data
@@ -257,6 +257,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addGood(this.addGoodData).then(res => {
+            console.log(res)
             if (res.meta.status === 201) {
               this.$message.success(res.meta.msg)
               this.$router.push({path: 'list'})

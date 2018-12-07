@@ -166,8 +166,8 @@ export const getListData = (params) => {
 }
 
 // 获取商品分类数据列表
-export const getCateData = () => {
-  return axios.get(`categories`)
+export const getCateData = (type) => {
+  return axios.get(`categories`, {params: {type: type}})
     .then((results) => {
       return results.data
     })
@@ -184,6 +184,22 @@ export const addGood = (params) => {
 // 删除商品
 export const deleteGoodById = (id) => {
   return axios.delete(`goods/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}
+
+// 根据商品id查询对应的商品
+export const searchGoodsById = (id) => {
+  return axios.get(`goods/${id}`)
+    .then((results) => {
+      return results.data
+    })
+}
+
+// 添加分类
+export const addCate = (params) => {
+  return axios.post(`categories`, params)
     .then((results) => {
       return results.data
     })

@@ -7,14 +7,26 @@
           placeholder="请输入内容"
           v-model="query"
           class="input-with-select"
-          style="width:400px;"
+          style="width:300px;"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="searchGoods"
+            @click="searchGoodsByQuery"
           ></el-button>
         </el-input>
+        <!-- <el-input
+          placeholder="请输入对应商品id"
+          v-model="goods_id"
+          class="input-with-select"
+          style="width:300px;"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="searchGoodsById"
+          ></el-button>
+        </el-input> -->
         <el-button
           type="success"
           plain
@@ -98,6 +110,7 @@ import { getListData, deleteGoodById } from '@/api'
 export default {
   data () {
     return {
+      goods_id: '',
       query: '',
       pagenum: 1,
       pagesize: 10,
@@ -116,6 +129,7 @@ export default {
         // console.log(res)
         if (res.meta.status === 200) {
           this.listData = res.data.goods
+          // console.log(this.listData)
           this.total = res.data.total
         }
       })
@@ -133,12 +147,24 @@ export default {
       this.init()
     },
     // 搜索对应的商品
-    searchGoods () {
+    searchGoodsByQuery () {
       this.init()
     },
+    // 根据商品id查询对应的商品
+    // searchGoodsById () {
+    //   console.log(this.goods_id)
+    //   searchGoodsById(this.goods_id).then(res => {
+    //     console.log(res)
+    //     if (res.meta.status === 200) {
+    //       this.listData = res.data
+    //       console.log(this.listData)
+    //     } else {
+    //       this.$message.error(res.meta.msg)
+    //     }
+    //   })
+    // },
     // 根据商品id删除商品
     handleDelete (data) {
-      console.log(data.goods_id)
       deleteGoodById(data.goods_id).then(res => {
         if (res.meta.status === 200) {
           this.$message.success(res.meta.msg)
