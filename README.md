@@ -20,7 +20,25 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
+# 登录状态保存
+` HTTP请求是无状态的 `
++ cookie 
+  + 保存在客户端
+  + 数据量小(很多站点对cookie 的大小和数量都进行了限制)
+  + 不安全(别人可以分析存放在本地的cookie 并进行 cookie 欺骗，也可能被拦截)
++ session
+  + 服务器端
+  + 安全
+  + session可以依赖cookie，也可以不依赖使用url
+  + 访问量增多，占用服务器资源，如果服务器挂了，所有保存的信息都没了
++ token
+  + 服务器不存在用户状态，定义通用算法
+  + 客户端第一次登录后，服务器会生成一个 token 返回给客户端
+  + 后续所有请求都会带着token
+  + 服务器根据算法校验token的合法性
+  
 # 设置导航守卫
+` https://router.vuejs.org/zh-cn/advanced/navigation-guards.html `
 ```js
   router.beforeEach((to, from, next) => {
     // 获取 token 
@@ -35,7 +53,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     }
   })
 ```
-# 添加请求拦截器 
+# axios 添加请求拦截器 
+` https://github.com/axios/axios `
 -- 因为除了登录页不需要 Authorization , 其他页面都需要在请求头上带上 token 不然不能请求到数据
 ` 利用 axios 在请求之前添加拦截器 `
 ```js
