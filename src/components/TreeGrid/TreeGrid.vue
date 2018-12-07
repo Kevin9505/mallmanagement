@@ -127,7 +127,7 @@ export default {
     },
     getCateInfoById (row) {
       // 根据ID查询分类信息
-      this.$emit('editCate', row.cat_id)
+      this.$emit('editCate', row)
     },
     deleteCategory (row) {
       // 删除分类

@@ -62,10 +62,42 @@
         >确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 添加商品分类弹框 -->
+    <el-dialog
+      title="编辑商品分类"
+      :visible.sync="editCatePicdialogFormVisible"
+    >
+      <el-form
+        :model="editCateForm"
+        ref="editCateForm"
+        :rules="rules"
+        :label-width="formLabelWidth"
+      >
+        <el-form-item
+          label="分类名称"
+          prop="cat_name"
+        >
+          <el-input
+            v-model="editCateForm.cat_name"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editCatePicdialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="editCateSubmit('editCateForm')"
+        >确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getCateData, addCate, deleteCate } from '@/api'
+import { getCateData, addCate, deleteCate, editCate } from '@/api'
 // 导入自定义组件
 import TreeGrid from '@/components/TreeGrid/TreeGrid.vue'
 export default {
@@ -79,6 +111,11 @@ export default {
       formLabelWidth: '120px',
       // 控制添加分类提示框的显示
       addCatePicdialogFormVisible: false,
+      editCatePicdialogFormVisible: false,
+      editCateForm: {
+        cat_id: '',
+        cat_name: ''
+      },
       // 添加商品分类的数据
       addCateForm: {
         cat_pid: '0',
@@ -86,19 +123,20 @@ export default {
         cat_level: '0'
       },
       // 分类列表的配置
-      columns: [{
-        text: '分类名称',
-        dataIndex: 'cat_name',
-        width: ''
-      }, {
-        text: '是否有效',
-        dataIndex: 'cat_deleted',
-        width: ''
-      }, {
-        text: '排序',
-        dataIndex: 'cat_level',
-        width: ''
-      }],
+      columns: [
+        {
+          text: '分类名称',
+          dataIndex: 'cat_name',
+          width: ''
+        }, {
+          text: '是否有效',
+          dataIndex: 'cat_deleted',
+          width: ''
+        }, {
+          text: '排序',
+          dataIndex: 'cat_level',
+          width: ''
+        }],
       // 分类数据
       cateList: [],
       // 分类列表数据
@@ -134,7 +172,7 @@ export default {
     },
     // 级联选择器选中值
     handleChange (value) {
-      console.log(value)
+      // console.log(value)
       if (value.length === 1) {
         this.addCateForm.cat_level = '1'
         this.addCateForm.cat_pid = value[0]
@@ -150,7 +188,7 @@ export default {
         if (valid) {
           // console.log(this.addCateForm)
           addCate(this.addCateForm).then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.meta.status === 201) {
               this.$message.success(res.meta.msg)
               this.init()
@@ -199,7 +237,23 @@ export default {
       })
     },
     // 编辑分类
-    editCategory () {}
+    editCategory (data) {
+      console.log(data)
+      this.editCateForm.cat_id = data.cat_id
+      this.editCateForm.cat_name = data.cat_name
+      this.editCatePicdialogFormVisible = true
+    },
+    editCateSubmit () {
+      console.log(this.editCateForm)
+      editCate(this.editCateForm).then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          console.log(res)
+        } else {
+          this.$message.error(res.meta.msg)
+        }
+      })
+    }
   },
   mounted () {
     this.init()

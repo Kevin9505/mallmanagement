@@ -212,3 +212,12 @@ export const deleteCate = (id) => {
       return results.data
     })
 }
+
+// 根据 id 编辑分类
+export const editCate = (params) => {
+  console.log(params)
+  return axios.put(`categories/${params.cat_id}`, {'cat_name': params.cat_name})
+    .then((results) => {
+      return results.data
+    })
+}
